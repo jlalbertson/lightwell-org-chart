@@ -1,0 +1,1180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lightwell Organization Chart</title>
+<style>
+:root {
+  --rh-red: #EE0000;
+  --rh-red-light: #fff0f0;
+  --rh-red-dark: #cc0000;
+  --ibm-blue: #0530AD;
+  --ibm-blue-light: #e8ecf8;
+  --supporting-gray: #6b7280;
+  --supporting-bg: #f3f4f6;
+  --gig-orange: #d97706;
+  --gig-bg: #fef3c7;
+  --bg: #ffffff;
+  --bg-card: #ffffff;
+  --bg-section: #f9fafb;
+  --bg-team: #ffffff;
+  --text: #111827;
+  --text-secondary: #6b7280;
+  --text-muted: #9ca3af;
+  --border: #e5e7eb;
+  --border-focus: #3b82f6;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1);
+  --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+  --radius: 8px;
+  --radius-sm: 4px;
+  --transition: 0.2s ease;
+  --manager-bg: #f0f4ff;
+  --po-bg: #f0fdf4;
+  --po-border: #86efac;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f172a;
+    --bg-card: #1e293b;
+    --bg-section: #1e293b;
+    --bg-team: #0f172a;
+    --text: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+    --border: #334155;
+    --shadow: 0 1px 3px rgba(0,0,0,0.3);
+    --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+    --rh-red-light: #3b1111;
+    --ibm-blue-light: #111b3b;
+    --supporting-bg: #1f2937;
+    --gig-bg: #3b3011;
+    --manager-bg: #172040;
+    --po-bg: #0f2a1a;
+    --po-border: #22763d;
+  }
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+}
+
+.header {
+  background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+  color: white;
+  padding: 24px 32px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.header h1 {
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.header-subtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin-bottom: 16px;
+}
+
+.header-controls {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  max-width: 400px;
+  position: relative;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: 1px solid #475569;
+  border-radius: var(--radius);
+  background: #1e293b;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  transition: border-color var(--transition);
+}
+
+.search-box input::placeholder { color: #64748b; }
+.search-box input:focus { border-color: var(--border-focus); }
+
+.search-box::before {
+  content: '🔍';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+}
+
+.filter-buttons {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.filter-btn {
+  padding: 6px 14px;
+  border: 1px solid #475569;
+  border-radius: 20px;
+  background: transparent;
+  color: #94a3b8;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition);
+  white-space: nowrap;
+}
+
+.filter-btn:hover { border-color: #64748b; color: white; }
+.filter-btn.active { background: white; color: #0f172a; border-color: white; }
+
+.stats-bar {
+  display: flex;
+  gap: 24px;
+  padding: 12px 32px;
+  background: var(--bg-section);
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.stat-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.stat-dot.rh { background: var(--rh-red); }
+.stat-dot.ibm { background: var(--ibm-blue); }
+.stat-dot.supporting { background: var(--supporting-gray); border: 2px dashed var(--supporting-gray); background: transparent; width: 10px; height: 10px; }
+.stat-dot.gig { background: var(--gig-orange); }
+
+.stat-label { font-size: 13px; color: var(--text-secondary); }
+.stat-value { font-size: 15px; font-weight: 700; color: var(--text); }
+
+.container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 24px 32px;
+}
+
+.group-section {
+  margin-bottom: 32px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-card);
+}
+
+.group-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  background: var(--bg-section);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+  transition: background var(--transition);
+}
+
+.group-header:hover { filter: brightness(0.97); }
+
+.group-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.group-header .count {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: var(--border);
+  padding: 2px 8px;
+  border-radius: 10px;
+}
+
+.chevron {
+  font-size: 18px;
+  transition: transform 0.3s ease;
+  color: var(--text-secondary);
+}
+
+.group-header.collapsed .chevron { transform: rotate(-90deg); }
+
+.group-body {
+  padding: 16px 20px;
+  display: block;
+}
+
+.group-body.hidden { display: none; }
+
+.team-section {
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--bg-team);
+}
+
+.team-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--bg-section);
+  border-bottom: 1px solid var(--border);
+  cursor: pointer;
+  user-select: none;
+}
+
+.team-header h3 {
+  font-size: 15px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-header .count {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.team-body { padding: 12px 16px; }
+.team-body.hidden { display: none; }
+
+.po-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+  padding-bottom: 12px;
+  border-bottom: 1px dashed var(--border);
+}
+
+.po-row:empty { display: none; margin: 0; padding: 0; border: none; }
+
+.manager-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.people-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.person-card {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  min-width: 200px;
+  max-width: 280px;
+  flex: 0 0 auto;
+  transition: all var(--transition);
+  position: relative;
+}
+
+.person-card:hover {
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+.person-card.manager {
+  background: var(--manager-bg);
+  border-color: #6366f1;
+  border-width: 2px;
+}
+
+.person-card.po {
+  background: var(--po-bg);
+  border-color: var(--po-border);
+  border-width: 2px;
+}
+
+.person-card.supporting {
+  border-style: dashed;
+  border-color: var(--supporting-gray);
+  opacity: 0.85;
+}
+
+.person-card.ibm-card {
+  border-left: 3px solid var(--ibm-blue);
+}
+
+.person-card.gig-card {
+  border-left: 3px solid var(--gig-orange);
+}
+
+.person-card.highlight {
+  box-shadow: 0 0 0 3px var(--border-focus);
+  transform: translateY(-1px);
+}
+
+.person-card.dimmed {
+  opacity: 0.15;
+}
+
+.person-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.person-role {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.person-location {
+  font-size: 11px;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.person-location::before { content: '📍'; font-size: 10px; }
+
+.badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-top: 2px;
+}
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 1px 6px;
+  border-radius: 3px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.badge-rh { background: var(--rh-red-light); color: var(--rh-red); }
+.badge-ibm { background: var(--ibm-blue-light); color: var(--ibm-blue); }
+.badge-supporting { background: var(--supporting-bg); color: var(--supporting-gray); }
+.badge-gig { background: var(--gig-bg); color: var(--gig-orange); }
+.badge-po { background: var(--po-bg); color: #16a34a; border: 1px solid var(--po-border); }
+.badge-mgr { background: #eef2ff; color: #4f46e5; }
+.badge-tl { background: #fdf4ff; color: #a855f7; }
+
+@media (prefers-color-scheme: dark) {
+  .badge-rh { background: #3b1111; color: #ff6666; }
+  .badge-ibm { background: #111b3b; color: #6b8cff; }
+  .badge-supporting { background: #1f2937; color: #9ca3af; }
+  .badge-gig { background: #3b3011; color: #fbbf24; }
+  .badge-po { background: #0f2a1a; color: #4ade80; border-color: #22763d; }
+  .badge-mgr { background: #1e1b4b; color: #a5b4fc; }
+  .badge-tl { background: #2e1065; color: #c084fc; }
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding: 12px 20px;
+  background: var(--bg-section);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend-swatch {
+  width: 28px;
+  height: 18px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+}
+
+.legend-swatch.rh { background: var(--rh-red-light); border-left: 3px solid var(--rh-red); }
+.legend-swatch.ibm { background: var(--ibm-blue-light); border-left: 3px solid var(--ibm-blue); }
+.legend-swatch.supporting { border-style: dashed; border-color: var(--supporting-gray); }
+.legend-swatch.gig { background: var(--gig-bg); border-left: 3px solid var(--gig-orange); }
+.legend-swatch.mgr { background: var(--manager-bg); border: 2px solid #6366f1; }
+.legend-swatch.po { background: var(--po-bg); border: 2px solid var(--po-border); }
+
+.sub-team-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 12px 0 6px 0;
+  padding-bottom: 4px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sub-team-label:first-child { margin-top: 0; }
+
+.no-results {
+  text-align: center;
+  padding: 40px;
+  color: var(--text-muted);
+  font-size: 14px;
+  display: none;
+}
+
+.footer {
+  text-align: center;
+  padding: 24px;
+  color: var(--text-muted);
+  font-size: 12px;
+  border-top: 1px solid var(--border);
+  margin-top: 32px;
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Lightwell Organization</h1>
+  <div class="header-subtitle">All teams — as of November 2026</div>
+  <div class="header-controls">
+    <div class="search-box">
+      <input type="text" id="search" placeholder="Search by name, role, location, or team…" autocomplete="off">
+    </div>
+    <div class="filter-buttons">
+      <button class="filter-btn active" data-filter="all">All</button>
+      <button class="filter-btn" data-filter="rh">Red Hat</button>
+      <button class="filter-btn" data-filter="ibm">IBM</button>
+      <button class="filter-btn" data-filter="supporting">Supporting</button>
+      <button class="filter-btn" data-filter="gig">Gig</button>
+    </div>
+  </div>
+</div>
+
+<div class="stats-bar" id="stats-bar"></div>
+
+<div class="container">
+  <div class="legend">
+    <div class="legend-item"><div class="legend-swatch mgr"></div> Manager</div>
+    <div class="legend-item"><div class="legend-swatch po"></div> PO / Service Owner</div>
+    <div class="legend-item"><div class="legend-swatch rh"></div> Red Hat (Lightwell)</div>
+    <div class="legend-item"><div class="legend-swatch ibm"></div> IBM</div>
+    <div class="legend-item"><div class="legend-swatch supporting"></div> Supporting (external mgr)</div>
+    <div class="legend-item"><div class="legend-swatch gig"></div> Gig / Rotation</div>
+  </div>
+
+  <div id="org-chart"></div>
+  <div class="no-results" id="no-results">No people match your search.</div>
+</div>
+
+<div class="footer">
+  Lightwell Org Chart · Generated 2026-11-10 · Data from Team Roster + IBM Pod Roster
+</div>
+
+<script>
+const ORG_DATA = {
+  groups: [
+    {
+      name: "Org Leadership",
+      icon: "👔",
+      teams: [
+        {
+          name: "Org Leadership",
+          people: [
+            { name: "Mike McGrath", role: "VP, Software Engineering", location: "Remote US IL", company: "rh", status: "lw", isManager: true },
+            { name: "Jen Albertson", role: "Director, Engineering — Ecosystem Teams", location: "Raleigh", company: "rh", status: "lw", isManager: true },
+            { name: "Bryan M Kearney", role: "Sr Director, Engineering — Platform", location: "Raleigh", company: "rh", status: "lw", isManager: true },
+            { name: "Akash Srivastava", role: "Sr Director, Engineering — Refactory", location: "Boston", company: "rh", status: "lw", isManager: true },
+            { name: 'Mairin "Mo" Duffy', role: "Lead Architect", location: "Boston", company: "rh", status: "lw" },
+            { name: "Major William Hayden", role: "Architect", location: "Remote US TX", company: "rh", status: "lw" },
+            { name: "Adam John Miller", role: "Distinguished Engineer", location: "Remote US TX", company: "rh", status: "lw" },
+            { name: "Paul W. Frields", role: "Director, SME/Advisor", location: "Remote US VA", company: "rh", status: "lw" },
+            { name: "Stuart Corcoran", role: "Chief of Staff", location: "Remote US WA", company: "rh", status: "lw" },
+            { name: "Eric Randall Hadley", role: "Scrum Master", location: "Remote US NH", company: "rh", status: "lw" },
+            { name: "Rian Roberts", role: "Executive Assistant", location: "Raleigh", company: "rh", status: "lw" },
+          ]
+        }
+      ]
+    },
+    {
+      name: "IBM Org Leadership",
+      icon: "🔷",
+      teams: [
+        {
+          name: "IBM Org Leadership",
+          people: [
+            { name: "Dominika Oliver", role: "Manager", location: "EMEA", company: "ibm", status: "supporting", isManager: true },
+            { name: "Erin Schnabel", role: "Distinguished Engineer", location: "Remote US NY", company: "ibm", status: "supporting" },
+            { name: "Petr Holasek", role: "Manager", location: "EMEA", company: "ibm", status: "supporting", isManager: true },
+          ]
+        }
+      ]
+    },
+    {
+      name: "Forward Engineering",
+      icon: "🚀",
+      teams: [
+        {
+          name: "Fast Forward",
+          pos: [],
+          people: [
+            { name: "Major William Hayden", role: "Architect", location: "Remote US TX", company: "rh", status: "lw" },
+            { name: 'Mairin "Mo" Duffy', role: "Lead Architect", location: "Boston", company: "rh", status: "lw" },
+            { name: "Brian W Harrington", role: "Sr Principal PM - Technical", location: "Remote US CA", company: "rh", status: "supporting" },
+          ]
+        }
+      ]
+    },
+    {
+      name: "Platform",
+      icon: "⚙️",
+      teams: [
+        {
+          name: "Factory",
+          pos: [
+            { name: "Andrew McNamara", role: "Product Owner", location: "Remote US NC", company: "rh", status: "lw", isPO: true },
+          ],
+          managers: [
+            { name: "Kevan Holdaway", role: "Manager", location: "Raleigh", company: "rh", status: "lw", isManager: true },
+          ],
+          people: [
+            { name: "Patrick Wayne Creech", role: "Developer", location: "Raleigh", company: "rh", status: "lw" },
+            { name: "Drew Bomhof", role: "Developer", location: "Remote US MI", company: "rh", status: "lw" },
+            { name: "Ales Raszka", role: "Developer", location: "Brno", company: "rh", status: "lw" },
+            { name: "Jonathan Gangi", role: "Developer", location: "Remote Brazil", company: "rh", status: "lw" },
+            { name: "Bruno Pimentel", role: "Developer", location: "Brno", company: "rh", status: "lw" },
+            { name: "Parthey Khanderia", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "Radim Hopp", role: "Developer", location: "Brno", company: "rh", status: "lw" },
+          ],
+          supporting: [
+            { name: "Stephen Johnson", role: "Sr Manager", location: "Newcastle", company: "rh", status: "supporting" },
+            { name: "Marek Goldmann", role: "Manager", location: "Remote Poland", company: "rh", status: "supporting" },
+            { name: "Dennis Kliban", role: "Developer (Pulp)", location: "Raleigh", company: "rh", status: "supporting" },
+            { name: "Brian Bouterse", role: "Developer (Pulp)", location: "Raleigh", company: "rh", status: "supporting" },
+            { name: "Andrea Vibelli", role: "Developer (MW Build)", location: "Remote Italy", company: "rh", status: "supporting" },
+          ]
+        },
+        {
+          name: "Pipeline",
+          managers: [
+            { name: "Kevan Holdaway", role: "Manager", location: "Raleigh", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Nathan G Kinder", role: "Product Owner", location: "Remote US CA", company: "rh", status: "lw", isPO: true },
+          ],
+          people: [
+            { name: "Perry Myers", role: "Tech Lead", location: "Remote US PA", company: "rh", status: "lw", isTL: true },
+            { name: "Christopher M Duryee", role: "Distinguished Engineer", location: "Remote US DC", company: "rh", status: "lw" },
+            { name: "Chris Sams", role: "Developer", location: "Remote US AR", company: "rh", status: "lw" },
+            { name: "Henning Seljenes", role: "Infra/Ops Engineer", location: "Raleigh", company: "rh", status: "lw" },
+            { name: "Otavio Leme Fernandes", role: "Developer", location: "Remote Brazil", company: "rh", status: "lw" },
+            { name: "Ujjwal Bhattarai", role: "Infra/Ops Engineer", location: "Remote US NC", company: "rh", status: "lw" },
+          ],
+          supporting: [
+            { name: "John Poth", role: "SME/Advisor", location: "Remote France", company: "rh", status: "supporting" },
+            { name: "Jude Niroshan", role: "Developer", location: "Remote Germany", company: "rh", status: "supporting" },
+            { name: "Yael Fishel", role: "Developer", location: "Raanana", company: "rh", status: "supporting" },
+          ]
+        },
+        {
+          name: "Forward Scanning",
+          managers: [
+            { name: "Simon Steinbeiss", role: "Sr Manager", location: "Remote Austria", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Adam John Miller", role: "Product Owner", location: "Remote US TX", company: "rh", status: "lw", isPO: true },
+          ],
+          people: [
+            { name: "Nehanth Narendrula", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "Siddharth Sharma", role: "Developer", location: "Remote CA ON", company: "rh", status: "lw" },
+            { name: "Patrick Hickey", role: "Developer", location: "Remote US AZ", company: "rh", status: "lw" },
+            { name: "Diego Maniloff", role: "Developer", location: "Remote CA ON", company: "rh", status: "lw" },
+          ]
+        },
+        {
+          name: "UI",
+          pos: [
+            { name: "Justin L Sherrill", role: "Product Owner", location: "Raleigh", company: "rh", status: "lw", isPO: true },
+          ],
+          managers: [
+            { name: "Simon Steinbeiss", role: "Sr Manager", location: "Remote Austria", company: "rh", status: "lw", isManager: true },
+          ],
+          people: [
+            { name: "Stepan Maksymchuk", role: "Developer", location: "Remote Spain", company: "rh", status: "lw" },
+            { name: "Bryttanie House", role: "Developer", location: "Remote US MD", company: "rh", status: "lw" },
+            { name: "Matej Marusak", role: "Developer", location: "Remote Czech Republic", company: "rh", status: "lw" },
+            { name: "Stanislav Semeniuk", role: "Developer", location: "Brno", company: "rh", status: "lw" },
+            { name: "Rachel Yordan", role: "Developer", location: "Remote UK", company: "rh", status: "lw" },
+          ]
+        },
+        {
+          name: "Verification",
+          managers: [
+            { name: "Simon Steinbeiss", role: "Sr Manager", location: "Remote Austria", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Adam John Miller", role: "Product Owner", location: "Remote US TX", company: "rh", status: "lw", isPO: true },
+          ],
+          people: [
+            { name: "Marc Nuri San Felix", role: "Developer", location: "Remote Spain", company: "rh", status: "lw" },
+            { name: "Stephen John Matula", role: "Developer", location: "Lowell", company: "rh", status: "lw" },
+            { name: "Igor Brandao", role: "Developer", location: "Remote Brazil", company: "rh", status: "lw" },
+            { name: "Lokesh Mandvekar", role: "Developer", location: "Remote CA QC", company: "rh", status: "lw" },
+            { name: "Max Clinton", role: "Developer", location: "Remote US NC", company: "rh", status: "lw" },
+          ]
+        },
+        {
+          name: "Hosted Pulp",
+          people: [
+            { name: "Yasen Trahnov", role: "Developer (Contractor)", location: "Remote Czech Republic", company: "rh", status: "lw" },
+            { name: "Yogesh Vedpathak", role: "Developer", location: "Pune", company: "rh", status: "lw" },
+          ]
+        },
+        {
+          name: "Refactory",
+          managers: [
+            { name: "Kai Xu", role: "Manager", location: "Boston", company: "rh", status: "lw", isManager: true },
+          ],
+          people: [
+            { name: "Ari Ari Aye", role: "Developer", location: "Remote US WA", company: "rh", status: "lw" },
+            { name: "Mihir Athale", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "GX Xu", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "Neha Malepati", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "Yi Zheng", role: "Developer", location: "Remote US NJ", company: "rh", status: "lw" },
+            { name: "Oleg Silkin", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "Rohan Awhad", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "Shivchander Sudalairaj", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+            { name: "Tunyu Zhang", role: "Research Intern", location: "Boston", company: "rh", status: "lw" },
+            { name: "Harrison Stropkay", role: "Developer", location: "Boston", company: "rh", status: "lw" },
+          ],
+          supporting: [
+            { name: "Xi Yang", role: "Developer", location: "Boston", company: "rh", status: "supporting" },
+            { name: "Shabana Akhtar Baig", role: "Developer", location: "Boston", company: "rh", status: "supporting" },
+            { name: "Eshwar Prasad Sivaramakrishnan", role: "Developer", location: "Boston", company: "rh", status: "supporting" },
+            { name: "Mustafa Eyceoz", role: "Developer", location: "Boston", company: "rh", status: "supporting" },
+            { name: "Xingyu Liu", role: "Developer", location: "Boston", company: "rh", status: "supporting" },
+          ]
+        },
+      ]
+    },
+    {
+      name: "Ecosystem Teams",
+      icon: "🌐",
+      teams: [
+        {
+          name: "Ecosystem Leadership",
+          people: [
+            { name: "George Varsamis", role: "Sr Manager", location: "Newcastle UK", company: "rh", status: "lw", isManager: true },
+            { name: "Paul Caramuto", role: "Service Owner (Python/NPM)", location: "Remote Argentina", company: "rh", status: "lw", isPO: true },
+            { name: "Matthew Miller", role: "Community & Upstream Lead", location: "Boston", company: "rh", status: "lw" },
+            { name: "John Casey", role: "Pipeline Architect", location: "Remote US KS", company: "rh", status: "lw" },
+            { name: "Erle Marion", role: "PO, Ecosystem Onboarding", location: "Remote US TX", company: "rh", status: "lw", isPO: true },
+            { name: "Melanie Corr", role: "Service Owner (Java EMEA)", location: "Remote Belgium", company: "rh", status: "lw", isPO: true },
+            { name: "Anthony DeCausemaker", role: "Validated Build Factory Lead", location: "Remote US NY", company: "rh", status: "lw" },
+            { name: "Elle Mackey", role: "Data Scientist", location: "Boston", company: "rh", status: "lw" },
+          ]
+        },
+        {
+          name: "Java Pod 2",
+          managers: [
+            { name: "George Varsamis", role: "Manager", location: "Newcastle UK", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Melanie Corr", role: "Service Owner (Java EMEA)", location: "Remote Belgium", company: "rh", status: "lw", isPO: true },
+          ],
+          subTeams: [
+            {
+              label: "Red Hat",
+              people: [
+                { name: "Tehila Bachar", role: "Developer", location: "Raanana", company: "rh", status: "lw" },
+                { name: "Shmuel Melamud", role: "Developer", location: "Raanana", company: "rh", status: "lw" },
+              ]
+            },
+            {
+              label: "Supporting (RH Gig)",
+              people: [
+                { name: "Filip Zimandl", role: "Developer", location: "Remote Czech Republic", company: "rh", status: "gig" },
+                { name: "Antonio Vieiro Varela", role: "Developer", location: "Remote Spain", company: "rh", status: "gig" },
+              ]
+            },
+            {
+              label: "IBM",
+              people: [
+                { name: "Paramvir Jindal", role: "Developer", location: "Melbourne", company: "ibm", status: "lw" },
+                { name: "Vaishnavi R", role: "Developer", location: "Remote India Bangalore", company: "ibm", status: "lw" },
+                { name: "David Sladký", role: "Developer", location: "Brno", company: "ibm", status: "lw" },
+                { name: "Marco Belladelli", role: "Developer", location: "Remote Italy", company: "ibm", status: "lw" },
+                { name: "Marek Novotny", role: "SME/Advisor", location: "Remote Czech Republic", company: "ibm", status: "lw" },
+              ]
+            }
+          ]
+        },
+        {
+          name: "Java Pod 4 (Validated Builds)",
+          managers: [
+            { name: "George Varsamis", role: "Manager", location: "Newcastle UK", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Melanie Corr", role: "Service Owner (Java EMEA)", location: "Remote Belgium", company: "rh", status: "lw", isPO: true },
+          ],
+          subTeams: [
+            {
+              label: "Red Hat",
+              people: [
+                { name: "Doug Donahue", role: "Developer", location: "Remote US MA", company: "rh", status: "lw" },
+              ]
+            },
+            {
+              label: "IBM",
+              people: [
+                { name: "Thomas Cunningham", role: "Developer / Team Lead", location: "Remote US MA", company: "ibm", status: "lw", isTL: true },
+                { name: "Martin Stefanko", role: "Developer", location: "Brno", company: "ibm", status: "lw" },
+                { name: "Salvatore Mongiardo", role: "Developer", location: "Remote Italy", company: "ibm", status: "lw" },
+              ]
+            }
+          ]
+        },
+        {
+          name: "Java Pod 5",
+          managers: [
+            { name: "George Varsamis", role: "Manager", location: "Newcastle UK", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Melanie Corr", role: "Service Owner (Java EMEA)", location: "Remote Belgium", company: "rh", status: "lw", isPO: true },
+          ],
+          subTeams: [
+            {
+              label: "IBM",
+              people: [
+                { name: "Zuzanna Jerat", role: "Developer", location: "Remote Ireland", company: "ibm", status: "lw" },
+                { name: "Morris Ouedraogo", role: "Developer", location: "Remote Ireland", company: "ibm", status: "lw" },
+                { name: "Jiri Vanek", role: "Developer", location: "Remote Czech Republic", company: "ibm", status: "lw" },
+                { name: "David Kornel", role: "Developer", location: "Remote Czech Republic", company: "ibm", status: "lw" },
+                { name: "Peter Płaczek", role: "Developer", location: "Waterford City", company: "ibm", status: "lw" },
+                { name: "Nick Haynes", role: "Developer", location: "Dublin", company: "ibm", status: "lw" },
+                { name: "Seán Connaughton", role: "Engineer", location: "EMEA", company: "ibm", status: "lw" },
+                { name: "Sean Kavanagh", role: "Engineer", location: "EMEA", company: "ibm", status: "lw" },
+                { name: "Sean Okafor", role: "Engineer", location: "EMEA", company: "ibm", status: "lw" },
+              ]
+            }
+          ]
+        },
+        {
+          name: "Java Pod 6",
+          managers: [
+            { name: "George Varsamis", role: "Manager", location: "Newcastle UK", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Melanie Corr", role: "Service Owner (Java EMEA)", location: "Remote Belgium", company: "rh", status: "lw", isPO: true },
+          ],
+          subTeams: [
+            {
+              label: "Red Hat",
+              people: [
+                { name: "Eric Zhou", role: "Developer", location: "Remote CA ON", company: "rh", status: "lw" },
+                { name: "Alex Wood", role: "Developer", location: "Raleigh", company: "rh", status: "lw" },
+              ]
+            },
+            {
+              label: "IBM",
+              people: [
+                { name: "Theo Hinton-Hallows", role: "Developer", location: "Durham", company: "ibm", status: "lw" },
+                { name: "Mohammed Abourass", role: "Developer", location: "Remote Ireland", company: "ibm", status: "lw" },
+                { name: "Vanshita Gosain", role: "Developer", location: "Raleigh", company: "ibm", status: "lw" },
+                { name: "Jacob Fletcher", role: "Developer", location: "Durham", company: "ibm", status: "lw" },
+                { name: "Todd Gangloff", role: "Developer", location: "Raleigh", company: "ibm", status: "lw" },
+                { name: "Kim van der Riet", role: "SME", location: "US", company: "ibm", status: "lw" },
+                { name: "Kylan Duncan", role: "Engineer", location: "US", company: "ibm", status: "lw" },
+                { name: "Maya Echtinaw", role: "Engineer", location: "US", company: "ibm", status: "lw" },
+                { name: "Matthew Chan", role: "Engineer", location: "US", company: "ibm", status: "lw" },
+                { name: "Cameron Caen", role: "Engineer", location: "US", company: "ibm", status: "lw" },
+                { name: "Kenny Doan", role: "Engineer", location: "US", company: "ibm", status: "lw" },
+              ]
+            }
+          ]
+        },
+        {
+          name: "Python Pod 1",
+          managers: [
+            { name: "George Varsamis", role: "Manager", location: "Newcastle UK", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Paul Caramuto", role: "Service Owner (Python/NPM)", location: "Remote Argentina", company: "rh", status: "lw", isPO: true },
+          ],
+          subTeams: [
+            {
+              label: "Red Hat",
+              people: [
+                { name: "Gergo Mocsi", role: "Developer", location: "Budapest", company: "rh", status: "lw" },
+                { name: "Carlos Esteban Feria Vila", role: "Developer", location: "Brno", company: "rh", status: "lw" },
+                { name: "Shannon Donahue", role: "Developer", location: "Remote US NH", company: "rh", status: "lw" },
+                { name: "Anthony DeCausemaker", role: "Validated Build Factory Lead", location: "Remote US NY", company: "rh", status: "lw" },
+                { name: "Bryan Ramos", role: "Developer", location: "Remote US MA", company: "rh", status: "lw" },
+                { name: "Jakub Vulgan", role: "Tech Lead", location: "Brno", company: "rh", status: "lw", isTL: true },
+              ]
+            },
+            {
+              label: "Supporting",
+              people: [
+                { name: "Yuval Kashtan", role: "Developer (~50%)", location: "Boston", company: "rh", status: "supporting" },
+              ]
+            }
+          ]
+        },
+        {
+          name: "NPM Pod 1",
+          managers: [
+            { name: "George Varsamis", role: "Manager", location: "Newcastle UK", company: "rh", status: "lw", isManager: true },
+          ],
+          pos: [
+            { name: "Paul Caramuto", role: "Service Owner (Python/NPM)", location: "Remote Argentina", company: "rh", status: "lw", isPO: true },
+          ],
+          subTeams: [
+            {
+              label: "Red Hat",
+              people: [
+                { name: "David Peraza", role: "Tech Lead", location: "Remote US FL", company: "rh", status: "lw", isTL: true },
+              ]
+            }
+          ]
+        },
+        {
+          name: "Intake & Pre-processing",
+          managers: [
+            { name: "George Varsamis", role: "Manager / PO", location: "Newcastle UK", company: "rh", status: "lw", isManager: true, isPO: true },
+          ],
+          subTeams: [
+            {
+              label: "Red Hat",
+              people: [
+                { name: "Elle Mackey", role: "Data Scientist", location: "Boston", company: "rh", status: "lw" },
+                { name: "Joe Stuart", role: "Principal Software Engineer", location: "Remote US MN", company: "rh", status: "lw" },
+              ]
+            },
+            {
+              label: "Supporting",
+              people: [
+                { name: "Michael Wilson", role: "Developer", location: "Remote US PA", company: "rh", status: "supporting" },
+                { name: "Arthur Savage", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Ben Chesser", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Donald Hunter", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Gaby Dozortsev", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Irina Petrova", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Ivan Font", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Lance Galletti", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Lee Juliette Yamin Cohen", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Lily Sturmann", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Michael Peters", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Parul Singh", role: "Developer", location: "", company: "rh", status: "supporting" },
+                { name: "Raymond Mc Creesh", role: "Developer", location: "", company: "rh", status: "supporting" },
+              ]
+            },
+            {
+              label: "IBM",
+              people: [
+                { name: "Christophe Laprun", role: "Engineer", location: "Remote France", company: "ibm", status: "lw" },
+              ]
+            }
+          ]
+        },
+        {
+          name: "Community & Upstream",
+          managers: [
+            { name: "Anna Syed", role: "Manager", location: "", company: "rh", status: "supporting", isManager: true },
+          ],
+          subTeams: [
+            {
+              label: "Red Hat",
+              people: [
+                { name: "Matthew Miller", role: "Distinguished Engineer", location: "Boston", company: "rh", status: "lw" },
+              ]
+            }
+          ]
+        },
+        {
+          name: "GA Speedrun",
+          subTeams: [
+            {
+              label: "Supporting",
+              people: [
+                { name: "Phillip Knezevich", role: "Developer", location: "Remote US PA", company: "rh", status: "supporting" },
+                { name: "Robert Sedor", role: "Sr Principal Chief Architect", location: "Remote US CT", company: "rh", status: "supporting" },
+              ]
+            }
+          ]
+        },
+      ]
+    },
+    {
+      name: "Partner Team",
+      icon: "🤝",
+      teams: [
+        {
+          name: "Program Management",
+          people: [
+            { name: "Drew Harris", role: "Sr Principal Program Manager", location: "Remote US MA", company: "rh", status: "supporting" },
+          ]
+        },
+        {
+          name: "Performance",
+          people: [
+            { name: "Pradeep Surisetty", role: "Director, Engineering", location: "Raleigh", company: "rh", status: "supporting" },
+          ]
+        },
+        {
+          name: "Product Security",
+          people: [
+            { name: "Ian Murphy", role: "Product Security Risk Manager", location: "Remote CA NB", company: "rh", status: "supporting" },
+            { name: "Aubrey Olandt", role: "Principal Product Security Engineer", location: "Remote US WA", company: "rh", status: "supporting" },
+          ]
+        },
+      ]
+    },
+  ]
+};
+
+function getAllPeople() {
+  const result = [];
+  for (const group of ORG_DATA.groups) {
+    for (const team of group.teams) {
+      const teamName = team.name;
+      const groupName = group.name;
+      const addPerson = (p) => result.push({ ...p, teamName, groupName });
+      if (team.managers) team.managers.forEach(addPerson);
+      if (team.pos) team.pos.forEach(addPerson);
+      if (team.people) team.people.forEach(addPerson);
+      if (team.supporting) team.supporting.forEach(addPerson);
+      if (team.subTeams) {
+        for (const st of team.subTeams) {
+          st.people.forEach(addPerson);
+        }
+      }
+    }
+  }
+  return result;
+}
+
+function renderStats() {
+  const all = getAllPeople();
+  const rhLw = all.filter(p => p.company === 'rh' && p.status === 'lw').length;
+  const rhSupp = all.filter(p => p.company === 'rh' && p.status === 'supporting').length;
+  const ibm = all.filter(p => p.company === 'ibm').length;
+  const gig = all.filter(p => p.status === 'gig').length;
+  const total = all.length;
+
+  document.getElementById('stats-bar').innerHTML = `
+    <div class="stat"><span class="stat-value">${total}</span><span class="stat-label">Total</span></div>
+    <div class="stat"><div class="stat-dot rh"></div><span class="stat-value">${rhLw}</span><span class="stat-label">Red Hat (LW)</span></div>
+    <div class="stat"><div class="stat-dot supporting"></div><span class="stat-value">${rhSupp}</span><span class="stat-label">Supporting</span></div>
+    <div class="stat"><div class="stat-dot ibm"></div><span class="stat-value">${ibm}</span><span class="stat-label">IBM</span></div>
+    <div class="stat"><div class="stat-dot gig"></div><span class="stat-value">${gig}</span><span class="stat-label">Gig / Rotation</span></div>
+  `;
+}
+
+function createCard(person) {
+  const classes = ['person-card'];
+  if (person.isManager) classes.push('manager');
+  if (person.isPO) classes.push('po');
+  if (person.status === 'supporting') classes.push('supporting');
+  if (person.company === 'ibm') classes.push('ibm-card');
+  if (person.status === 'gig' && person.company !== 'ibm') classes.push('gig-card');
+  if (person.status === 'gig' && person.company === 'ibm') classes.push('ibm-card');
+
+  const badges = [];
+  if (person.company === 'rh') badges.push('<span class="badge badge-rh">RH</span>');
+  if (person.company === 'ibm') badges.push('<span class="badge badge-ibm">IBM</span>');
+  if (person.status === 'supporting') badges.push('<span class="badge badge-supporting">Supporting</span>');
+  if (person.status === 'gig') badges.push('<span class="badge badge-gig">Gig</span>');
+  if (person.isManager) badges.push('<span class="badge badge-mgr">Manager</span>');
+  if (person.isPO) badges.push('<span class="badge badge-po">' + (person.role.includes('Service Owner') ? 'SO' : 'PO') + '</span>');
+  if (person.isTL) badges.push('<span class="badge badge-tl">Tech Lead</span>');
+
+  const searchable = `${person.name} ${person.role} ${person.location} ${person.company} ${person.status}`.toLowerCase();
+
+  return `<div class="${classes.join(' ')}" data-search="${searchable}" data-company="${person.company}" data-status="${person.status}">
+    <div class="person-name">${person.name}</div>
+    <div class="person-role">${person.role}</div>
+    <div class="person-location">${person.location}</div>
+    <div class="badges">${badges.join('')}</div>
+  </div>`;
+}
+
+function renderTeam(team) {
+  let html = `<div class="team-section" data-team="${team.name}">
+    <div class="team-header" onclick="toggleTeamBody(this)">
+      <h3>${team.name} <span class="count"></span></h3>
+      <span class="chevron">▼</span>
+    </div>
+    <div class="team-body">`;
+
+  if (team.pos && team.pos.length > 0) {
+    html += `<div class="po-row">${team.pos.map(createCard).join('')}</div>`;
+  }
+
+  if (team.managers && team.managers.length > 0) {
+    html += `<div class="manager-row">${team.managers.map(createCard).join('')}</div>`;
+  }
+
+  if (team.people && team.people.length > 0) {
+    html += `<div class="people-grid">${team.people.map(createCard).join('')}</div>`;
+  }
+
+  if (team.supporting && team.supporting.length > 0) {
+    html += `<div class="sub-team-label">Supporting (external manager)</div>`;
+    html += `<div class="people-grid">${team.supporting.map(createCard).join('')}</div>`;
+  }
+
+  if (team.subTeams) {
+    for (const st of team.subTeams) {
+      if (st.people.length > 0) {
+        html += `<div class="sub-team-label">${st.label}</div>`;
+        html += `<div class="people-grid">${st.people.map(createCard).join('')}</div>`;
+      }
+    }
+  }
+
+  html += `</div></div>`;
+  return html;
+}
+
+function renderOrgChart() {
+  const container = document.getElementById('org-chart');
+  let html = '';
+
+  for (const group of ORG_DATA.groups) {
+    html += `<div class="group-section" data-group="${group.name}">
+      <div class="group-header" onclick="toggleGroup(this)">
+        <h2>${group.icon} ${group.name} <span class="count"></span></h2>
+        <span class="chevron">▼</span>
+      </div>
+      <div class="group-body">`;
+    for (const team of group.teams) {
+      html += renderTeam(team);
+    }
+    html += `</div></div>`;
+  }
+
+  container.innerHTML = html;
+  updateCounts();
+}
+
+function updateCounts() {
+  document.querySelectorAll('.group-section').forEach(groupEl => {
+    const cards = groupEl.querySelectorAll('.person-card:not(.dimmed)');
+    const visible = Array.from(cards).filter(c => !c.classList.contains('dimmed')).length;
+    groupEl.querySelector('.group-header .count').textContent = `${visible}`;
+  });
+
+  document.querySelectorAll('.team-section').forEach(teamEl => {
+    const cards = teamEl.querySelectorAll('.person-card:not(.dimmed)');
+    const visible = Array.from(cards).filter(c => !c.classList.contains('dimmed')).length;
+    teamEl.querySelector('.team-header .count').textContent = `(${visible})`;
+  });
+}
+
+function toggleGroup(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  body.classList.toggle('hidden');
+}
+
+function toggleTeamBody(header) {
+  const body = header.nextElementSibling;
+  body.classList.toggle('hidden');
+  header.querySelector('.chevron').style.transform = body.classList.contains('hidden') ? 'rotate(-90deg)' : '';
+}
+
+let activeFilter = 'all';
+let searchQuery = '';
+
+function applyFilters() {
+  const cards = document.querySelectorAll('.person-card');
+  let visibleCount = 0;
+
+  cards.forEach(card => {
+    const matchesSearch = !searchQuery || card.dataset.search.includes(searchQuery);
+    let matchesFilter = true;
+
+    if (activeFilter === 'rh') matchesFilter = card.dataset.company === 'rh' && card.dataset.status === 'lw';
+    else if (activeFilter === 'ibm') matchesFilter = card.dataset.company === 'ibm';
+    else if (activeFilter === 'supporting') matchesFilter = card.dataset.status === 'supporting';
+    else if (activeFilter === 'gig') matchesFilter = card.dataset.status === 'gig';
+
+    if (matchesSearch && matchesFilter) {
+      card.classList.remove('dimmed');
+      if (searchQuery) card.classList.add('highlight');
+      else card.classList.remove('highlight');
+      visibleCount++;
+    } else {
+      card.classList.add('dimmed');
+      card.classList.remove('highlight');
+    }
+  });
+
+  document.getElementById('no-results').style.display = visibleCount === 0 ? 'block' : 'none';
+  updateCounts();
+}
+
+document.getElementById('search').addEventListener('input', (e) => {
+  searchQuery = e.target.value.toLowerCase().trim();
+  applyFilters();
+});
+
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    activeFilter = btn.dataset.filter;
+    applyFilters();
+  });
+});
+
+renderStats();
+renderOrgChart();
+</script>
+</body>
+</html>
